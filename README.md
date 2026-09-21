@@ -235,7 +235,15 @@ After you have tested the application successfully:
 
 ## Part 10: Create a PythonAnywhere Account
 
-Create a [PythonAnywhere](https://www.pythonanywhere.com/) account if you do not already have one. After signing in, open a **Bash console**.
+**Choose the free Beginner account ($0/month). You do not need a paid plan for this assignment.**
+
+1. Open the [PythonAnywhere pricing page](https://www.pythonanywhere.com/pricing/).
+2. Scroll past the paid plans to **Explore with a limited account**.
+3. Select **Create a Beginner account** and complete signup. If you already have a free account, sign in to it.
+
+The free account includes one web app at `YOUR-USERNAME.pythonanywhere.com`. Use that included address for this project; a custom domain is not required. Your app only needs to remain live for a few days for this assignment, so there is no need to upgrade. Keep it available through grading.
+
+After signing in, open a **Bash console**.
 
 ## Part 11: Clone Your GitHub Repository on PythonAnywhere
 
