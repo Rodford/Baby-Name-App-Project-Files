@@ -8,7 +8,7 @@ app = Flask(__name__, static_url_path='', static_folder='./static')
 ### Constants
 
 MIN_YEAR = 1910
-MAX_YEAR = 2019
+MAX_YEAR = 2025
 
 
 ### Flask routes

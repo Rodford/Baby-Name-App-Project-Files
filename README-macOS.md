@@ -1,12 +1,10 @@
-# Baby Name App Project Instructions
-
-**Mac users:** Follow the [macOS project instructions](README-macOS.md).
+# Baby Name App Project Instructions for Mac Users
 
 In this project, you will use Python, Pandas, Flask, GitHub, and Visual Studio Code to complete and deploy a small web application that displays the popularity of baby names over time.
 
 You will:
 
-- Set up a Linux development environment using Windows Subsystem for Linux (WSL)
+- Set up Python and Git on macOS
 - Fork and clone a GitHub repository
 - Create and use a Python virtual environment
 - Complete portions of a Flask application
@@ -14,22 +12,41 @@ You will:
 - Commit and push your changes to GitHub
 - Deploy the completed application to PythonAnywhere
 
-## Part 1: Install Windows Subsystem for Linux (WSL)
+## Part 1: Install Python and Git on macOS
 
-> If you already have WSL and Ubuntu installed and working, you can skip this section.
+These instructions use the Mac Terminal app and work with Intel and Apple silicon Macs. You do not need WSL or Ubuntu.
 
-1. Open **PowerShell as Administrator**.
-2. Run:
+### Install Python 3.12
 
-   ```powershell
-   wsl --install
+The project's requirements file pins versions of NumPy and Pandas. Use **Python 3.12** for this assignment to match those packages and the deployment environment.
+
+1. If Python 3.12 is not already installed, open the [Python 3.12.10 release page](https://www.python.org/downloads/release/python-31210/).
+2. Under **Files**, download the **macOS 64-bit universal2 installer**, which supports both Intel and Apple silicon Macs.
+3. Open the downloaded package and follow the installer prompts.
+4. Open **Terminal** from **Applications > Utilities**, or press `Command + Space`, type `Terminal`, and press Return.
+5. Check the installed version:
+
+   ```bash
+   python3.12 --version
    ```
 
-3. Restart your computer if prompted.
-4. After restarting, open **Ubuntu** from the Start menu.
-5. The first time Ubuntu opens, create a Linux username and password when prompted.
+You should see `Python 3.12.x`. Use the explicit `python3.12` command when creating your virtual environment below.
 
-**Important:** Nothing appears on the screen while you type a Linux password. This is normal. Type the password and press Enter.
+### Install Git
+
+In Terminal, check whether Git is available:
+
+```bash
+git --version
+```
+
+If macOS asks you to install command line developer tools, accept the installation and wait for it to finish. If Git is unavailable and no prompt appears, run:
+
+```bash
+xcode-select --install
+```
+
+Follow the prompts, then run `git --version` again. If the tools are already installed and Git reports a version, continue. See [Apple's command line tools instructions](https://developer.apple.com/library/archive/technotes/tn2339/_index.html) for installation details.
 
 ## Part 2: Create a GitHub Account
 
@@ -39,13 +56,13 @@ You will use GitHub to store your project and later transfer it to PythonAnywher
 
 ## Part 3: Install Visual Studio Code
 
-1. Download and install [Visual Studio Code](https://code.visualstudio.com/) on Windows.
+1. Download [Visual Studio Code for macOS](https://code.visualstudio.com/docs/setup/mac) and move the application into your **Applications** folder.
 2. Open VS Code.
-3. Open the **Extensions** panel by pressing `Ctrl + Shift + X`.
-4. Install these Microsoft extensions:
-
-   - **Python**
-   - **WSL**
+3. Open the **Extensions** panel by pressing `Command + Shift + X`.
+4. Install the **Python** extension published by Microsoft.
+5. Press `Command + Shift + P` to open the Command Palette.
+6. Search for and run **Shell Command: Install 'code' command in PATH**.
+7. Close and reopen Terminal so the change takes effect.
 
 You do not need separate GitHub extensions for this project. VS Code includes the Git features needed to clone, commit, pull, and push repositories.
 
@@ -64,12 +81,7 @@ https://github.com/YOUR-USERNAME/Baby-Name-App-Project-Files.git
 
 ## Part 5: Clone Your Repository
 
-Open Ubuntu. First, make sure Git and Python are installed:
-
-```bash
-sudo apt update
-sudo apt install git python3 python3-pip python3-venv
-```
+Open Terminal. You installed Git and Python in Part 1.
 
 Create a folder for your projects:
 
@@ -91,18 +103,16 @@ cd Baby-Name-App-Project-Files
 code .
 ```
 
-VS Code should open a window connected to WSL. You should see the project files in the Explorer panel.
-
-Check that the bottom-left corner shows **WSL: Ubuntu** (or your Ubuntu distribution name). In this WSL-connected window, open **Extensions** with `Ctrl + Shift + X` and find **Python** by Microsoft (`ms-python.python`). If you see **Install in WSL: Ubuntu**, click it and wait for installation to finish. The Python extension must be installed and enabled in WSL, even if you already installed it locally on Windows.
+VS Code should open the project folder. You should see the project files in the Explorer panel. If `code .` is not recognized, repeat the PATH setup in Part 3, or use **File > Open Folder** in VS Code and select the project folder inside your home folder's `projects` directory.
 
 ## Part 6: Create a Virtual Environment
 
 A virtual environment keeps the Python packages used by this project separate from packages used by other Python projects.
 
-In the VS Code terminal, make sure you are inside the project directory. Create a virtual environment named `venv`:
+In VS Code, choose **Terminal > New Terminal**. Make sure you are inside the project directory. Create a virtual environment named `venv`:
 
 ```bash
-python3 -m venv venv
+python3.12 -m venv venv
 ```
 
 Activate it:
@@ -111,7 +121,7 @@ Activate it:
 source venv/bin/activate
 ```
 
-You should now see `(venv)` at the beginning of the terminal prompt.
+You should now see `(venv)` at the beginning of the terminal prompt. Run `python --version` and confirm it reports Python 3.12. Each time you open a new terminal to work on this project, return to the project folder and run `source venv/bin/activate` again.
 
 Upgrade pip and install the packages required for the project:
 
@@ -122,34 +132,9 @@ python -m pip install -r requirements.txt
 
 ### Select the virtual environment in VS Code
 
-1. Press `Ctrl + Shift + P`.
+1. Press `Command + Shift + P`.
 2. Search for `Python: Select Interpreter`.
 3. Select the Python interpreter located inside the project's `venv` folder.
-
-### If `Python: Select Interpreter` does not appear
-
-This command comes from Microsoft's Python extension. A common cause is that the extension is installed on Windows but is not installed or enabled in the WSL-connected VS Code window. See [Microsoft's VS Code and WSL setup guide](https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-vscode).
-
-1. Use the **VS Code desktop application** for these steps. GitHub's repository page in a browser is where you store and review your code.
-2. Check the bottom-left corner of VS Code for **WSL: Ubuntu** (or your distribution name). Opening an Ubuntu terminal inside a Windows VS Code window alone does not connect that window to WSL. If the WSL indicator is missing, open Ubuntu and run:
-
-   ```bash
-   cd ~/projects/Baby-Name-App-Project-Files
-   code .
-   ```
-
-3. In the WSL-connected window, press `Ctrl + Shift + X`. Search for `ms-python.python` and select **Python** by **Microsoft**. Click **Install in WSL: Ubuntu** if offered. If the extension is disabled, enable it for this workspace.
-4. Open `app.py` and allow the extension to finish loading. If VS Code offers a reload, accept it. Otherwise, open the Command Palette and run `Developer: Reload Window`.
-5. Press `Ctrl + Shift + P` again and search for `Python: Select Interpreter`.
-
-If the command appears but your virtual environment is not listed, choose **Enter interpreter path...** and browse to the project's `venv/bin/python`. You can find its full path by running these commands from the project directory in the WSL terminal:
-
-```bash
-source venv/bin/activate
-python -c "import sys; print(sys.executable)"
-```
-
-The path should end with `Baby-Name-App-Project-Files/venv/bin/python`. Selecting an interpreter in VS Code and activating the virtual environment in a terminal are separate steps; keep using `source venv/bin/activate` when you open a new terminal to run the app.
 
 ### Do not commit the virtual environment
 
@@ -218,7 +203,17 @@ python -m flask --app app --debug run
 
 Open [http://127.0.0.1:5000](http://127.0.0.1:5000) in your web browser. Test several baby names and make sure the visualization appears. Try names that were popular during different periods.
 
-When you are finished testing, return to the terminal and press `Ctrl + C` to stop the server.
+When you are finished testing, return to the terminal and press `Control + C` (not Command + C) to stop the server.
+
+### If port 5000 is already in use
+
+macOS may use port 5000 for AirPlay Receiver. If Flask reports that the address is already in use, start the app on a different port:
+
+```bash
+python -m flask --app app --debug run --port 5001
+```
+
+Then open [http://127.0.0.1:5001](http://127.0.0.1:5001). See the [Flask development server documentation](https://flask.palletsprojects.com/server/) for details.
 
 ## Part 9: Commit and Push Your Work to GitHub
 
@@ -226,12 +221,25 @@ After you have tested the application successfully:
 
 1. Open the **Source Control** panel in VS Code.
 2. Review the files you changed. You should **not** see the `venv` folder listed as a change.
-3. Enter a descriptive commit message, such as `Complete baby name Flask application`.
+3. Stage the files you intend to commit using the **+** button beside each file. Enter a descriptive commit message, such as `Complete baby name Flask application`.
 4. Commit your changes.
 5. Select **Sync Changes** or **Push** to send the commit to GitHub. If VS Code asks you to sign in to GitHub, follow the browser prompts.
 6. Open your repository on GitHub and verify that your changes appear there.
 
+### If Git asks for your name and email
+
+In the VS Code terminal, run the following commands from the project folder, replacing the example values with your own name and an email associated with your GitHub account (or your GitHub-provided no-reply email):
+
+```bash
+git config user.name "Your Name"
+git config user.email "YOUR-EMAIL"
+```
+
+Then try the commit again.
+
 # Deploying the App to PythonAnywhere
+
+From this point on, run commands in the **PythonAnywhere Bash console**, not in your Mac's local terminal. PythonAnywhere has its own Python environment.
 
 ## Part 10: Create a PythonAnywhere Account
 
@@ -296,6 +304,14 @@ On the PythonAnywhere **Web** page, find the **Virtualenv** section. Enter:
 ```
 
 Replace `YOUR-PYTHONANYWHERE-USERNAME` with your PythonAnywhere username.
+
+In the **Code** section, set both **Source code** and **Working directory** to:
+
+```text
+/home/YOUR-PYTHONANYWHERE-USERNAME/Baby-Name-App-Project-Files
+```
+
+Replace the username with your PythonAnywhere username. The working directory is important because the application reads `./data/babynames.csv` using a relative path.
 
 ## Part 15: Configure the WSGI File
 
