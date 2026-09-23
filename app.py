@@ -1,3 +1,4 @@
+from pathlib import Path
 from flask import Flask, request, Response, render_template
 import json
 import pandas as pd
@@ -17,32 +18,34 @@ MAX_YEAR = 2025
 def root():
     return app.send_static_file('index.html')
 
-    
+
 @app.route('/submit')
 def get_name_popularity():
-    
+
     """
     Return the year-by-year popularity rankings for a given baby name
     and sex combination.
-    
+
     Parameters
     ----------
     name: the baby name, passed as HTTP GET parameter in the URL
     sex: 'F' or 'M', passed as HTTP GET parmatere in the URL
-    
+
     Returns
     -------
     JSON-formatted list containing the year-by-year popularity rankings
     for the given name-sex combination.
     """
-    
+
     # Parse HTTP GET parameters
     name_submitted = request.args.get('name')
     sex_submitted = request.args.get('sex')
-    
+
     # Extract year and rank in year for the given name-sex combination
-    name_subset = babynames[ (babynames['name'] == name_submitted) & 
-                            (babynames['sex'] == sex_submitted)]
+    name_subset = babynames[
+        (babynames['name'] == name_submitted) &
+        (babynames['sex'] == sex_submitted)
+    ].sort_values('year')
 
     name_years = name_subset['year'].tolist()
     name_ranks = name_subset['rank_in_year'].tolist()
@@ -52,17 +55,21 @@ def get_name_popularity():
     # Build the return list with a value of None for the years where
     # the given name does not appear
     result = []
-    
+    ranks_by_year = dict(zip(name_years, name_ranks))
+
     for year in range(MIN_YEAR, MAX_YEAR + 1):
-        if year not in name_years:
-            result.append(None);
+        if year not in ranks_by_year:
+            result.append(None)
         else:
-            result.append(name_ranks.pop(0))
-    
+            result.append(ranks_by_year[year])
+
     # Return as JSON
     # Python None values are automatically parsed to JavaScript null
     return_object = {'data': result}
-    return Response(json.dumps(return_object),  mimetype='application/json')
+    return Response(
+        json.dumps(return_object),
+        mimetype='application/json'
+    )
 
 
 ### Main -- runs when the app starts
@@ -71,17 +78,24 @@ def get_name_popularity():
 # Name the columns 'sex', 'year', 'name' and 'count
 # Name this dataframe "babynames"
 
-babynames = pd.read_csv('./data/babynames.csv',
-                        names=['sex','year','name','count'])
+data_path = Path(__file__).resolve().parent / 'data' / 'babynames.csv'
+
+babynames = pd.read_csv(
+    data_path,
+    names=['sex', 'year', 'name', 'count']
+)
 
 # Construct a column giving the rank within each year and sex for each name
 #
 # e.g. Mary is the #1 ranking name for girls in 1910
 #      John is the #1 ranking name for boys in 1910
 
-babynames['rank_in_year'] = (babynames.groupby(['year','sex'])['count'].rank(ascending=False))
+babynames['rank_in_year'] = (
+    babynames
+    .groupby(['year', 'sex'])['count']
+    .rank(ascending=False)
+)
 
 #The output should be a column of babynames called 'rank_in_year'
 #Calculate rank in year by grouping babynames by 'year' and then 'sex'
 #Then calculate the rank() of 'count' where ascending=False
-
